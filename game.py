@@ -12,64 +12,82 @@ class Personage():
         self.width --  width of personage (used in self.draw())
         self.direction -- used to choose the right skin
         self.moving -- is personage moving (necessary for moving animation)
+        self.frames_info -- information corresponding a width, height of skin frame
+                              and to the length of the row with frames of moving animation
         """
         self.x: int = 50
         self.y: int = 50
         self.u: int = 0
         self.v: int = 0
         self.width: int = 16
+        self.height: int = 27
         self.direction = 'right'
         self.moving: bool = False
+
+        self.frames_info = {'horizontal': {'end_u': 112, 'width': 14, 'width_moving': 14},
+                              'vertical': {'end_u': 185, 'width': 12}}
 
     def set_direction(self):
         """
         changes u coordinate to select right skin in editor
+        coordinate v corresponds to direction
+
         """
         if self.direction == "left":
-            self.u = 0
-        if self.direction == "right":
-            self.u = 16
-        if self.direction == "front":
-            self.u = 32
-        if self.direction == "back":
-            self.u = 48
+            self.width = self.frames_info['horizontal']['width']
+            self.v = 0
+        elif self.direction == "right":
+            self.width = self.frames_info['horizontal']['width']
+            self.v = 28
+        elif self.direction == "front":
+            self.width = self.frames_info['vertical']['width']
+            self.v = 56
+        elif self.direction == "back":
+            self.width = self.frames_info['vertical']['width']
+            self.v = 84
 
     def move(self):
         """
         personage move implementation
         variables:
-            v - "y" coordinate of line with move animation frames in Editor
             start_u, end_u - horizontal limits of line with move animation frames in Editor
-            width - width of personage while moving is diffrent to idling
+            width - width of personage while moving horizontally is diffrent to idling
         """
-        v = 32
         start_u = 14
         end_u = 112
-        self.width = 14
+        if self.direction == 'right' or self.direction == 'left':
+            self.width = self.frames_info['horizontal']['width_moving']
+            end_u = self.frames_info['horizontal']['end_u']
+        elif self.direction == 'up' or self.direction == 'down':
+            end_u = self.frames_info['vertical']['end_u']
+
+        # if not currently moving set first frame of animation as a current
         if self.moving == False:
-            self.v = v
             self.u = start_u
             self.moving = True
+        # if current frame is last in animation the next one will return to first on the line
         elif self.u >= end_u:
             self.u = start_u
+        # move personage forward, change skin
         else:
             # self.x+=2
-            self.u += 14
+            self.u += self.width + 1  # one pixel offset between frames
 
     def update(self):
         # self.x = (self.x + 1) % pyxel.width
         if pyxel.btn(pyxel.KEY_A):
             self.direction = 'left'
-            self.set_direction()
-        if pyxel.btn(pyxel.KEY_S):
+        elif pyxel.btn(pyxel.KEY_S):
             self.direction = 'front'
             self.set_direction()
-        if pyxel.btn(pyxel.KEY_W):
+        elif pyxel.btn(pyxel.KEY_W):
             self.direction = 'back'
             self.set_direction()
-        if pyxel.btn(pyxel.KEY_D):
+        elif pyxel.btn(pyxel.KEY_D):
             self.direction = 'right'
-            self.set_direction()
+
+        self.set_direction()
+        # press r to run animation in selected direction !only development thing!
         if pyxel.btn(pyxel.KEY_R):
             self.move()
 
@@ -84,7 +102,7 @@ class App:
 
         self.personage = Personage()
 
-        pyxel.move(self.update, self.draw)
+        pyxel.run(self.update, self.draw)
 
     def update(self):
         self.personage.update()
