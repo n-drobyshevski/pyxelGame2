@@ -1,23 +1,30 @@
 import pyxel
-SIZE = 200
-class App:
+
+
+SIZE = 200  # window size
+
+
+class Personage():
     def __init__(self):
-        pyxel.init(SIZE, SIZE, fps=10   )
-        pyxel.load('my_resource.pyxres')
-        
-        self.x:int = 50
-        self.y:int = 50
-        self.u:int = 0
-        self.v:int = 0
-        self.width:int=16
-        self.running:bool = False
-        
+        """
+        self.x, self.y -- position in game window
+        self.u, self.v -- position in editor window (alternatives for x and y in pyxel editor)
+        self.width --  width of personage (used in self.draw())
+        self.direction -- used to choose the right skin
+        self.moving -- is personage moving (necessary for moving animation)
+        """
+        self.x: int = 50
+        self.y: int = 50
+        self.u: int = 0
+        self.v: int = 0
+        self.width: int = 16
         self.direction = 'right'
-        
-        pyxel.run(self.update, self.draw)
-        
-        
+        self.moving: bool = False
+
     def set_direction(self):
+        """
+        changes u coordinate to select right skin in editor
+        """
         if self.direction == "left":
             self.u = 0
         if self.direction == "right":
@@ -27,27 +34,28 @@ class App:
         if self.direction == "back":
             self.u = 48
 
-    def run(self):
+    def move(self):
+        """
+        personage move implementation
+        variables:
+            v - "y" coordinate of line with move animation frames in Editor
+            start_u, end_u - horizontal limits of line with move animation frames in Editor
+            width - width of personage while moving is diffrent to idling
+        """
+        v = 32
         start_u = 14
         end_u = 112
-        v = 32
         self.width = 14
-        if self.running == False:
-            self.v= v
+        if self.moving == False:
+            self.v = v
             self.u = start_u
-            self.running = True
+            self.moving = True
         elif self.u >= end_u:
             self.u = start_u
         else:
-            if self.direction == 'right':
-                # self.x+=2
-                self.u += 14
-            else:
-                self.x -= 1
-                self.u -= 14
-            
-        
-                
+            # self.x+=2
+            self.u += 14
+
     def update(self):
         # self.x = (self.x + 1) % pyxel.width
         if pyxel.btn(pyxel.KEY_A):
@@ -63,12 +71,27 @@ class App:
             self.direction = 'right'
             self.set_direction()
         if pyxel.btn(pyxel.KEY_R):
-            self.run()
+            self.move()
 
+    def draw(self):
+        pyxel.blt(self.x, self.y, 1, self.u, self.v, self.width, 32)
+
+
+class App:
+    def __init__(self):
+        pyxel.init(SIZE, SIZE, fps=10)
+        pyxel.load('my_resource.pyxres')
+
+        self.personage = Personage()
+
+        pyxel.move(self.update, self.draw)
+
+    def update(self):
+        self.personage.update()
 
     def draw(self):
         pyxel.cls(0)
-        pyxel.blt(self.x, self.y,1,self.u,self.v,self.width,32)
-        # pyxel.rect(self.x, self.y, 20, 20, 11)
+        self.personage.draw()
+
 
 App()
