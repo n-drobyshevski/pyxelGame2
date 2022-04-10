@@ -19,9 +19,9 @@ class Personage():
         self.y: int = 50
         self.u: int = 0
         self.v: int = 0
-        self.width: int = 16
+        self.width: int = 13
         self.height: int = 27
-        self.direction = 'right'
+        self.direction = 'down'
         self.moving: bool = False
 
         self.frames_info = {'horizontal': {'end_u': 112, 'width': 14, 'width_moving': 14},
@@ -33,17 +33,18 @@ class Personage():
         coordinate v corresponds to direction
 
         """
+
         if self.direction == "left":
-            self.width = self.frames_info['horizontal']['width']
+            # self.width = self.frames_info['horizontal']['width']
             self.v = 0
         elif self.direction == "right":
-            self.width = self.frames_info['horizontal']['width']
+            # self.width = self.frames_info['horizontal']['width']
             self.v = 28
         elif self.direction == "front":
-            self.width = self.frames_info['vertical']['width']
+            # self.width = self.frames_info['vertical']['width']
             self.v = 56
         elif self.direction == "back":
-            self.width = self.frames_info['vertical']['width']
+            # self.width = self.frames_info['vertical']['width']
             self.v = 84
 
     def move(self):
@@ -71,7 +72,7 @@ class Personage():
         # move personage forward, change skin
         else:
             # self.x+=2
-            self.u += self.width + 1  # one pixel offset between frames
+            self.u += self.width # one pixel offset between frames
 
     def update(self):
         # self.x = (self.x + 1) % pyxel.width
@@ -89,10 +90,13 @@ class Personage():
         self.set_direction()
         # press r to run animation in selected direction !only development thing!
         if pyxel.btn(pyxel.KEY_R):
+            self.moving = True
             self.move()
+        if pyxel.btnr(pyxel.KEY_R):
+            self.moving = False
 
     def draw(self):
-        pyxel.blt(self.x, self.y, 1, self.u, self.v, self.width, 32)
+        pyxel.blt(self.x, self.y, 1, self.u, self.v, self.width, self.height)
 
 
 class App:
