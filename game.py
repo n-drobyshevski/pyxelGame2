@@ -11,9 +11,6 @@ class Personage():
         self.u, self.v -- position in editor window (alternatives for x and y in pyxel editor)
         self.width --  width of personage (used in self.draw())
         self.direction -- used to choose the right skin
-        self.moving -- is personage moving (necessary for moving animation)
-        self.frames_info -- information corresponding a width, height of skin frame
-                              and to the length of the row with frames of moving animation
         """
         self.x: int = 50
         self.y: int = 50
@@ -22,10 +19,6 @@ class Personage():
         self.width: int = 13
         self.height: int = 27
         self.direction = 'down'
-        self.moving: bool = False
-
-        self.frames_info = {'horizontal': {'end_u': 112, 'width': 14, 'width_moving': 14},
-                              'vertical': {'end_u': 185, 'width': 12}}
 
     def set_direction(self):
         """
@@ -47,53 +40,8 @@ class Personage():
             # self.width = self.frames_info['vertical']['width']
             self.v = 84
 
-    def move(self):
-        """
-        personage move implementation
-        variables:
-            start_u, end_u - horizontal limits of line with move animation frames in Editor
-            width - width of personage while moving horizontally is diffrent to idling
-        """
-        start_u = 14
-        end_u = 112
-        if self.direction == 'right' or self.direction == 'left':
-            self.width = self.frames_info['horizontal']['width_moving']
-            end_u = self.frames_info['horizontal']['end_u']
-        elif self.direction == 'up' or self.direction == 'down':
-            end_u = self.frames_info['vertical']['end_u']
-
-        # if not currently moving set first frame of animation as a current
-        if self.moving == False:
-            self.u = start_u
-            self.moving = True
-        # if current frame is last in animation the next one will return to first on the line
-        elif self.u >= end_u:
-            self.u = start_u
-        # move personage forward, change skin
-        else:
-            # self.x+=2
-            self.u += self.width # one pixel offset between frames
-
     def update(self):
-        # self.x = (self.x + 1) % pyxel.width
-        if pyxel.btn(pyxel.KEY_A):
-            self.direction = 'left'
-        elif pyxel.btn(pyxel.KEY_S):
-            self.direction = 'front'
-            self.set_direction()
-        elif pyxel.btn(pyxel.KEY_W):
-            self.direction = 'back'
-            self.set_direction()
-        elif pyxel.btn(pyxel.KEY_D):
-            self.direction = 'right'
-
-        self.set_direction()
-        # press r to run animation in selected direction !only development thing!
-        if pyxel.btn(pyxel.KEY_R):
-            self.moving = True
-            self.move()
-        if pyxel.btnr(pyxel.KEY_R):
-            self.moving = False
+        pass
 
     def draw(self):
         pyxel.blt(self.x, self.y, 1, self.u, self.v, self.width, self.height)

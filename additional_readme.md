@@ -12,11 +12,11 @@ ____
 | :----------------------- | :--------------------------------------------- |
 | ```venv\```              | python virtual environnement                   |
 | ```src\```               | design files                                   |
+| ```src\personage\```     | design files for personage                     |
 | ```game.py```            | main python file                               |
 | ```my_resource.pyxres``` | pyxel resources file (created by pyxel editor) |
 
-Design made with [Pixelorama](https://github.com/Orama-Interactive/Pixelorama) editor ('.pxo' files)
-> im exporting .pxo in .png, and then importing them in pyxel editor
+.pmp files are converted in .png and then added to pyxel editor
 
 ____
 
