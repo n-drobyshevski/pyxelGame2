@@ -21,7 +21,7 @@ ____
 ____
 
 ## Useful VSC extensions
-
+- Better Comments
 - Code Spell Checker
 - Visual Studio IntelliCode
 - TODO Highlight
